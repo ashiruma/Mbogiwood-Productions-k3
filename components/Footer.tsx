@@ -27,7 +27,7 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-bold text-white mb-4">Contact Us</h3>
           <p>Nairobi, Kenya</p>
-          <p>info@mbogiwood.com</p>
+          <p>admin@mbogiwood.com</p>
         </div>
       </div>
       <div className="text-center mt-8 border-t border-gray-800 pt-6">
