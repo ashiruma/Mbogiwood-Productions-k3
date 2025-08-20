@@ -6,7 +6,7 @@ import prisma from "@/lib/prismadb";
 import { redirect } from "next/navigation";
 import MpesaButton from "@/components/MpesaButton";
 
-// A simple, secure Video Player component
+
 const VideoPlayer = ({ videoUrl }: { videoUrl: string }) => {
     return (
         <div className="aspect-video">
