@@ -13,7 +13,7 @@ export default function HomePage() {
             <div className="w-8 h-8 bg-[#4CAF50] rounded-full flex items-center justify-center">
               <Play className="w-4 h-4 text-white" />
             </div>
-            <h1 className="text-2xl font-bold">Mbogiwood</h1>
+            <h1 className="text-2xl font-bold">Mbogiwood Productions</h1>
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
@@ -49,7 +49,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <h2 className="text-5xl font-bold mb-6 leading-tight">
-                Welcome to <span className="text-[#4CAF50]">Mbogiwood</span>
+                Welcome to <span className="text-[#4CAF50]">Mbogiwood Productions</span>
               </h2>
               <p className="text-xl mb-8 text-gray-200">
                 Your premier destination for African cinema, career opportunities, and creative content. Discover,
