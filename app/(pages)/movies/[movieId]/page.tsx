@@ -1,81 +1,60 @@
-import Link from "next/link";
-import ConfirmPaymentButton from "@/components/ConfirmPaymentButton";
+// app/(pages)/movies/[movieId]/page.tsx
+"use client";
 
-interface PurchasePageProps {
-  params: { movieId: string };
-  searchParams?: { amount?: string; title?: string };
-}
+import React, { useState, useEffect } from "react";
 
-export default function PurchasePage({ params, searchParams }: PurchasePageProps) {
-  const { movieId } = params;
-  const amount = searchParams?.amount ?? "150";
-  const title = searchParams?.title ?? "Selected Movie";
+// This is a temporary function to get mock data
+const getMockFilmDetails = (movieId: string) => ({
+  id: movieId,
+  title: `Movie Title for ID: ${movieId}`,
+  description: "This is a detailed description of the film. It's a compelling story that will keep you on the edge of your seat. We will replace this with real data fetched from the Django API.",
+  price: 5.99,
+});
+
+const MovieDetails = ({ params }: { params: { movieId: string } }) => {
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const film = getMockFilmDetails(params.movieId);
+
+  const handlePurchase = () => {
+    console.log(`Simulating purchase for ${film.title}...`);
+    // In a real app, this would redirect to the Stripe/Mpesa URL
+    alert("Purchase successful! The film is now unlocked.");
+    setIsUnlocked(true);
+  };
 
   return (
-    <div className="min-h-screen bg-white text-[#3B2F2F]">
-      {/* Navigation (kept visually consistent with About page) */}
-      <nav className="bg-[#3B2F2F] text-white px-6 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-[#4CAF50] rounded-full flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>
-            </div>
-            <Link href="/" className="text-2xl font-bold">
-              Mbogiwood
-            </Link>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/films" className="hover:text-[#4CAF50] transition-colors">Films</Link>
-            <Link href="/jobs" className="hover:text-[#4CAF50] transition-colors">Jobs</Link>
-            <Link href="/gallery" className="hover:text-[#4CAF50] transition-colors">Gallery</Link>
-            <Link href="/contact" className="hover:text-[#4CAF50] transition-colors">Contact</Link>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <Link href="/signin" className="border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent px-3 py-1 rounded-md border">Sign In</Link>
-            <Link href="/signup" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white px-3 py-1 rounded-md">Sign Up</Link>
-          </div>
-        </div>
-      </nav>
-
-      {/* Checkout */}
-      <section className="py-16">
-        <div className="max-w-3xl mx-auto px-6">
-          <div className="bg-white shadow-md rounded-md p-8">
-            <h1 className="text-3xl font-bold text-[#3B2F2F] mb-4">Checkout</h1>
-            <p className="text-gray-600 mb-6">You're about to buy: <span className="font-semibold text-[#3B2F2F]">{title}</span></p>
-
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <div className="text-sm text-gray-500">Amount</div>
-                <div className="text-2xl font-bold text-[#4CAF50]">KES {amount}</div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Movie ID</div>
-                <div className="text-lg font-medium text-[#3B2F2F]">{movieId}</div>
-              </div>
-            </div>
-
-            <p className="text-gray-600 mb-6">
-              Confirm to initiate M-Pesa payment. After initiating, follow the prompts on your phone to complete the payment.
-            </p>
-
-            <ConfirmPaymentButton movieId={movieId} />
-
-            <div className="mt-8 text-sm text-gray-500">
-              <p>If you prefer not to proceed, <Link href={`/movies/${movieId}`} className="text-[#4CAF50]">go back to movie</Link>.</p>
+    <div className="min-h-screen bg-black text-white pt-24">
+      <main className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-4">{film.title}</h1>
+        
+        {isUnlocked ? (
+          <div className="aspect-video w-full max-w-4xl mx-auto bg-gray-800 rounded-lg mb-8">
+            <div className="flex items-center justify-center h-full">
+              <p className="text-2xl">▶️ Film Unlocked - Video Player Here</p>
             </div>
           </div>
-        </div>
-      </section>
+        ) : (
+          <div className="aspect-video w-full max-w-4xl mx-auto bg-gray-800 rounded-lg mb-8 flex items-center justify-center">
+             <p>Trailer Placeholder</p>
+          </div>
+        )}
+        
+        <div className="max-w-4xl mx-auto">
+          {!isUnlocked && (
+            <button
+              onClick={handlePurchase}
+              className="bg-red-600 text-white w-full py-3 text-xl font-bold rounded hover:bg-red-700 mb-8"
+            >
+              Pay ${film.price} to Watch Now
+            </button>
+          )}
 
-      {/* Footer (simple) */}
-      <footer className="bg-[#3B2F2F] text-white py-8">
-        <div className="max-w-7xl mx-auto px-6 text-center">
-          <p className="text-gray-300">&copy; 2024 Mbogiwood. All rights reserved.</p>
+          <h2 className="text-2xl font-semibold mb-2">Description</h2>
+          <p className="text-gray-400">{film.description}</p>
         </div>
-      </footer>
+      </main>
     </div>
   );
-}
+};
+
+export default MovieDetails;
