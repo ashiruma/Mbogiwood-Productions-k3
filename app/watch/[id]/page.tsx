@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -22,7 +23,12 @@ export default function WatchPage({ params }: Props) {
             <div className="absolute">
               <div className="text-center">
                 <p className="mb-4">Placeholder poster / player</p>
-                <button className="px-4 py-2 bg-[#4CAF50] text-white rounded-md">Play Sample</button>
+
+                {/* Play Sample navigates to a sample film route so the button is functional */}
+                <Link href="/watch/journey-home">
+                  <button className="px-4 py-2 bg-[#4CAF50] text-white rounded-md">Play Sample</button>
+                </Link>
+
               </div>
             </div>
           </div>
