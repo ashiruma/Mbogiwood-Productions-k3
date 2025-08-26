@@ -41,13 +41,15 @@ export default function DashboardPage() {
               </div>
               <span className="hidden md:block">John Doe</span>
             </div>
-            <Button
-              variant="outline"
-              className="border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent"
-            >
-              <Settings className="w-4 h-4 mr-2" />
-              Settings
-            </Button>
+            <Link href="/settings">
+              <Button
+                variant="outline"
+                className="border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent"
+              >
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -141,9 +143,11 @@ export default function DashboardPage() {
                         <div className="bg-[#4CAF50] h-2 rounded-full" style={{ width: "65%" }}></div>
                       </div>
                     </div>
-                    <Button size="sm" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90">
-                      <Play className="w-4 h-4" />
-                    </Button>
+                    <Link href="/watch/journey-home">
+                      <Button size="sm" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90">
+                        <Play className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
 
                   <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
@@ -159,9 +163,11 @@ export default function DashboardPage() {
                         <div className="bg-[#4CAF50] h-2 rounded-full" style={{ width: "25%" }}></div>
                       </div>
                     </div>
-                    <Button size="sm" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90">
-                      <Play className="w-4 h-4" />
-                    </Button>
+                    <Link href="/watch/lagos-nights">
+                      <Button size="sm" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90">
+                        <Play className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </CardContent>
@@ -240,12 +246,14 @@ export default function DashboardPage() {
                     <span className="text-sm">Next billing</span>
                     <span className="text-sm text-gray-600">Jan 15, 2025</span>
                   </div>
-                  <Button
-                    variant="outline"
-                    className="w-full border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent"
-                  >
-                    Manage Subscription
-                  </Button>
+                  <Link href="/subscribe">
+                    <Button
+                      variant="outline"
+                      className="w-full border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent"
+                    >
+                      Manage Subscription
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -284,13 +292,15 @@ export default function DashboardPage() {
                       View Gallery
                     </Button>
                   </Link>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start border-gray-300 hover:border-[#D32F2F] hover:text-[#D32F2F] bg-transparent"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Sign Out
-                  </Button>
+                  <Link href="/login">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start border-gray-300 hover:border-[#D32F2F] hover:text-[#D32F2F] bg-transparent"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
