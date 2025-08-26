@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Link from "next/link" // Import the Link component
 import { Button } from "@/components/ui/button"
 
 export default function FilmsPage() {
@@ -16,14 +17,18 @@ export default function FilmsPage() {
               Start Free Trial
             </Button>
 
-            <Button
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white hover:text-[#3B2F2F] bg-transparent"
-              onClick={() => (window.location.href = "/films") }
-            >
-              Browse Free Films
-            </Button>
+            {/* --- UPDATED --- */}
+            {/* This button is now wrapped in a Link for faster navigation */}
+            <Link href="/films/browse">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-[#3B2F2F] bg-transparent"
+              >
+                Browse Free Films
+              </Button>
+            </Link>
+
           </div>
         </div>
       </main>
