@@ -34,17 +34,12 @@ export default function AboutPage() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Link href="/signin">
-              <Button
-                variant="outline"
-                className="border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/signup">
-              <Button className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white">Sign Up</Button>
-            </Link>
+            <Button href="/signin" className="border border-[#4CAF50] text-[#4CAF50] hover:bg-[#4CAF50] hover:text-white bg-transparent px-3 py-1 rounded transition-colors">
+              Sign In
+            </Button>
+            <Button href="/signup" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white px-3 py-1 rounded transition-colors">
+              Sign Up
+            </Button>
           </div>
         </div>
       </nav>
@@ -194,20 +189,12 @@ export default function AboutPage() {
             enthusiast, there's a place for you here.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup">
-              <Button size="lg" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white">
-                Get Started
-              </Button>
-            </Link>
-            <Link href="/about">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white text-white hover:bg-white hover:text-[#3B2F2F] bg-transparent"
-              >
-                Learn More
-              </Button>
-            </Link>
+            <Button href="/signup" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white px-5 py-3 rounded text-lg">
+              Get Started
+            </Button>
+            <Button href="/about" className="border border-white text-white hover:bg-white hover:text-[#3B2F2F] px-5 py-3 rounded text-lg">
+              Learn More
+            </Button>
           </div>
         </div>
       </section>
@@ -256,9 +243,9 @@ export default function AboutPage() {
             <div>
               <h5 className="font-semibold mb-4">Connect</h5>
               <p className="text-gray-300 mb-4">Stay updated with the latest from Mbogiwood</p>
-              <Link href="/subscribe">
-                <Button className="bg-[#4CAF50] hover:bg-[#4CAF50]/90">Subscribe</Button>
-              </Link>
+              <Button href="/subscribe" className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white px-4 py-2 rounded">
+                Subscribe
+              </Button>
             </div>
           </div>
 
