@@ -1,28 +1,28 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 /**
- * Minimal/simulated API for initiating an M-Pesa checkout flow.
- * For a production integration this would:
- *  - Validate the user/session
- *  - Create a pendingTransaction in DB
- *  - Call Safaricom's API and return the CheckoutRequestID
+ * Stub MPesa initiate endpoint.
+ * Replace this stub with actual MPesa integration using your credentials.
  *
- * This stub returns a synthetic checkoutRequestId so the front-end can proceed.
+ * Client should POST { movieId, amount, phoneNumber, title? } and the API should
+ * call the payment provider, then return { checkoutRequestId, statusUrl? }.
  */
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json().catch(() => ({}));
-    const movieId = body?.movieId ?? "unknown";
+    const body = await request.json();
+    const { movieId, amount, phoneNumber, title } = body;
 
-    // Simulate creating a checkout request id
-    const checkoutRequestId = `SIM-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    // TODO: call real MPesa API here using env vars like MPESA_CONSUMER_KEY, MPESA_CONSUMER_SECRET
+    // For now we simulate an initiation:
+    const checkoutRequestId = `ck_${Date.now()}`;
 
-    // In a real implementation you would persist a pendingTransaction with checkoutRequestId
-    // and return the real CheckoutRequestID from Safaricom.
+    // Simulate a short delay like a network call
+    await new Promise((res) => setTimeout(res, 300));
 
-    return NextResponse.json({ success: true, checkoutRequestId, movieId });
+    return NextResponse.json({ success: true, checkoutRequestId });
   } catch (err) {
-    console.error("initiate mpesa error", err);
-    return NextResponse.json({ success: false, error: "Could not initiate payment" }, { status: 500 });
+    console.error('mpesa initiate error', err);
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
