@@ -3,8 +3,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import prisma from "@/lib/prismadb";
+//import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import prisma from "@/lib/prisma";
 
 // Define the expected request body structure
 interface StkPushRequestBody {
