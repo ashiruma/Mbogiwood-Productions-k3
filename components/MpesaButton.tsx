@@ -24,7 +24,7 @@ export default function MpesaButton({ movieId, amount, title }: MpesaButtonProps
 
   return (
     <Button
-      className="bg-[#4CAF50] hover:bg-[#4CAF50]/90 text-white"
+      className="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-[var(--primary-foreground)]"
       onClick={goToCheckout}
     >
       Buy / Pay KES {amount}
