@@ -5,7 +5,6 @@ import Link from "next/link"
 
 export default function Page() {
   return (
-    // Assuming a dark theme by default, but classes will adapt
     <div className="min-h-screen bg-secondary">
       {/* Navigation */}
       <nav className="bg-background text-foreground px-6 py-4">
