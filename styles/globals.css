@@ -3,103 +3,66 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Brand color variables — use hex to match the supplied logo exactly */
 :root {
-  --background: #000000; /* site background, change if you want a light theme */
-  --foreground: #3B2F2F; /* mbogi-dark (logo text brown) */
-  --card: #0b0b0b;
-  --card-foreground: #E5E7EB;
+  --background: 255 255 255; /* White */
+  --foreground: 59 47 47;   /* Dark Brown #3B2F2F */
 
-  --primary: #4CAF50; /* green play */
-  --primary-foreground: #FFFFFF;
+  --primary: 169 29 33;      /* Deep Red #A91D21 */
+  --primary-foreground: 255 255 255; /* White */
 
-  --secondary: #3B2F2F; /* slightly darker brown for large areas */
-  --secondary-foreground: #FFFFFF;
+  --secondary: 243 244 246; /* A light gray for cards/backgrounds */
+  --secondary-foreground: 59 47 47; /* Dark Brown */
 
-  --accent: #FBBF24; /* yellow accent */
-  --accent-foreground: #3B2F2F;
+  --accent: 253 184 19;      /* Accent Yellow #FDB813 */
+  --accent-foreground: 59 47 47; /* Dark Brown */
 
-  --destructive: #B91C1C; /* red accent */
-  --destructive-foreground: #FFFFFF;
+  --card: 255 255 255;
+  --card-foreground: 59 47 47;
+  --popover: 255 255 255;
+  --popover-foreground: 59 47 47;
+  --muted: 243 244 246;
+  --muted-foreground: 107 114 128;
+  --destructive: 220 38 38;
+  --destructive-foreground: 255 255 255;
 
-  --muted: #111827;
-  --muted-foreground: #9CA3AF;
-
-  --border: #111111;
-  --input: #111111;
-  --ring: #4CAF50;
-
-  --radius: 0.625rem;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 169 29 33;
+  --radius: 0.5rem;
 }
 
-/* Dark mode overrides (if you want .dark class to flip) */
 .dark {
-  --background: #000000;
-  --foreground: #EDEBEA; /* light text on dark bg */
-  --card: #111111;
-  --card-foreground: #EDEBEA;
-  /* Keep primary noticeable in dark */
-  --primary: #4CAF50;
-  --primary-foreground: #000000;
-  --accent: #FBBF24;
-  --destructive: #B91C1C;
-}
+  --background: 59 47 47; /* Dark Brown #3B2F2F */
+  --foreground: 255 255 255; /* White */
 
-/* Tailwind component utilities so components can use semantic classes */
-@layer components {
-  .btn-primary {
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border-radius: 0.375rem;
-    padding: 0.5rem 1rem;
-  }
-  .btn-primary:hover {
-    filter: brightness(0.95);
-  }
-  .btn-outline {
-    background: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-  }
-  .logo-img {
-    height: 48px;
-    width: auto;
-  }
-}
+  --primary: 169 29 33;      /* Deep Red #A91D21 */
+  --primary-foreground: 255 255 255; /* White */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+  --secondary: 24 24 27; /* A dark gray for cards */
+  --secondary-foreground: 255 255 255; /* White */
+
+  --accent: 253 184 19;      /* Accent Yellow #FDB813 */
+  --accent-foreground: 59 47 47; /* Dark Brown */
+
+  --card: 24 24 27;
+  --card-foreground: 255 255 255;
+  --popover: 24 24 27;
+  --popover-foreground: 255 255 255;
+  --muted: 39 39 42;
+  --muted-foreground: 161 161 170;
+  --destructive: 185 28 28;
+  --destructive-foreground: 255 255 255;
+  
+  --border: 39 39 42;
+  --input: 39 39 42;
+  --ring: 169 29 33;
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
-    @apply bg-[var(--background)] text-[var(--foreground)];
+    @apply bg-background text-foreground;
   }
 }
