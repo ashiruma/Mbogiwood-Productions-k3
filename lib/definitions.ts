@@ -8,6 +8,12 @@ export interface Film {
   trailer_link: string;
 }
 
+// Add this new interface to describe the API's object structure
+export interface ApiResponse {
+  promo_films: Film[];
+  paid_films: Film[];
+}
+
 export interface Job {
   id: number;
   title: string;
@@ -17,5 +23,3 @@ export interface Job {
   posted_date: string;
   application_link: string;
 }
-
-// You can add more types for Gallery, etc.
