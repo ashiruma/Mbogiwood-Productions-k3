@@ -12,7 +12,7 @@ export async function fetchFilms(): Promise<Film[]> {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/films-list/`);
+    const response = await fetch(`${API_BASE_URL}/api/film_list_api/`); // Ensure URL matches urls.py
     if (!response.ok) {
       console.error(`API Error: Failed to fetch films with status ${response.status}`);
       return [];
@@ -40,13 +40,11 @@ export async function fetchJobs(): Promise<Job[]> {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/jobs-list/`);
+    const response = await fetch(`${API_BASE_URL}/api/jobs-list/`); // Ensure this endpoint exists
     if (!response.ok) {
       console.error(`API Error: Failed to fetch jobs with status ${response.status}`);
       return [];
     }
-    // Assuming the API returns an object like { "jobs": [...] }
-    // Or just returns the array directly. This handles both cases.
     const data = await response.json();
     return data.jobs || data || [];
   } catch (error) {
