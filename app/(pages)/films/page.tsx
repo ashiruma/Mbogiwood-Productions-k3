@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function FilmsPage() {
-  // The fetchFilms function from lib/data.ts already has error handling
   const films = await fetchFilms();
 
   return (
@@ -24,18 +23,23 @@ export default async function FilmsPage() {
             {films.map((film) => (
               <Card key={film.id} className="overflow-hidden bg-secondary border-border hover:shadow-lg transition-shadow">
                 <CardHeader className="p-0">
-                  {/* Use Next.js Image component for optimization */}
-                  <Image
-                    src={film.poster_image || '/placeholder-image.png'} // Fallback image
-                    alt={`Poster for ${film.title}`}
-                    width={500}
-                    height={750}
-                    className="w-full h-auto object-cover aspect-[2/3]"
-                  />
+                  {film.poster_image ? (
+                    <Image
+                      src={film.poster_image}
+                      alt={`Poster for ${film.title}`}
+                      width={500}
+                      height={750}
+                      className="w-full h-auto object-cover aspect-[2/3]"
+                    />
+                  ) : (
+                    <div className="w-full bg-muted aspect-[2/3] flex items-center justify-center">
+                      <p className="text-muted-foreground">No Image</p>
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent className="p-6">
                   <CardTitle className="font-heading mb-2">{film.title}</CardTitle>
-                  <p className="text-muted-foreground mb-4 line-clamp-3 h-18">
+                  <p className="text-muted-foreground mb-4 line-clamp-3 h-[72px]">
                     {film.description}
                   </p>
                   <Button asChild className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
