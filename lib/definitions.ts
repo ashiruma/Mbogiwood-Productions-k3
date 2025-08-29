@@ -8,7 +8,6 @@ export interface Film {
   trailer_link: string;
 }
 
-// Add this new interface to describe the API's object structure
 export interface ApiResponse {
   promo_films: Film[];
   paid_films: Film[];
