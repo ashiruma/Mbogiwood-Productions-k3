@@ -12,17 +12,16 @@ export async function fetchFilms(): Promise<Film[]> {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/api/film_list_api/`); // Ensure URL matches urls.py
+    // --- THIS URL HAS BEEN CORRECTED ---
+    const response = await fetch(`${API_BASE_URL}/api/films/film_list_api/`);
+
     if (!response.ok) {
       console.error(`API Error: Failed to fetch films with status ${response.status}`);
       return [];
     }
-    
+
     const data: ApiResponse = await response.json();
-    
-    // Combine the promo and paid films into a single array
     const allFilms = [...(data.promo_films || []), ...(data.paid_films || [])];
-    
     return allFilms;
 
   } catch (error) {

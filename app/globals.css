@@ -1,94 +1,140 @@
+/* app/globals.css */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* --- UPDATED COLORS START HERE --- */
+/* --- LIGHT THEME (with sidebar variables restored) --- */
 :root {
-  --background: 255 255 255; /* White */
-  --foreground: 59 47 47;   /* Dark Brown #3B2F2F */
+  --background: oklch(0.98 0.01 95); /* Warm off-white */
+  --foreground: oklch(0.15 0 0); /* Deep black text */
 
-  --primary: 169 29 33;      /* Deep Red #A91D21 */
-  --primary-foreground: 255 255 255; /* White */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
 
-  --secondary: 243 244 246; /* A light gray for cards/backgrounds */
-  --secondary-foreground: 59 47 47; /* Dark Brown */
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
 
-  --muted: 243 244 246;
-  --muted-foreground: 107 114 128;
+  --primary: oklch(0.65 0.25 30); /* Bold Red */
+  --primary-foreground: oklch(0.98 0 0);
 
-  --accent: 253 184 19;      /* Accent Yellow #FDB813 */
-  --accent-foreground: 59 47 47; /* Dark Brown */
-  
-  --destructive: 220 38 38;
-  --destructive-foreground: 255 255 255;
+  --secondary: oklch(0.85 0.20 95); /* Gold/Yellow */
+  --secondary-foreground: oklch(0.15 0 0);
 
-  --card: 255 255 255;
-  --card-foreground: 59 47 47;
-  --popover: 255 255 255;
-  --popover-foreground: 59 47 47;
+  --accent: oklch(0.70 0.20 140); /* Green */
+  --accent-foreground: oklch(0.98 0 0);
 
-  --border: 229 231 235;
-  --input: 229 231 235;
-  --ring: 169 29 33;
+  --muted: oklch(0.95 0.01 95);
+  --muted-foreground: oklch(0.40 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+
+  --border: oklch(0.90 0.01 95);
+  --input: oklch(0.90 0.01 95);
+  --ring: oklch(0.65 0.25 30); /* Red ring/glow */
+
   --radius: 0.625rem;
+
+  --sidebar: oklch(0.98 0.01 95);
+  --sidebar-foreground: oklch(0.15 0 0);
+
+  --sidebar-primary: oklch(0.65 0.25 30); /* Red */
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+
+  --sidebar-accent: oklch(0.70 0.20 140); /* Green */
+  --sidebar-accent-foreground: oklch(0.98 0 0);
+
+  --sidebar-border: oklch(0.90 0.01 95);
+  --sidebar-ring: oklch(0.85 0.20 95); /* Gold */
 }
 
+/* --- MBOGIWOOD BRAND THEME (Dark, with sidebar variables restored) --- */
 .dark {
-  --background: 59 47 47; /* Dark Brown #3B2F2F */
-  --foreground: 255 255 255; /* White */
+  --background: oklch(0.12 0 0); /* Cinematic deep black */
+  --foreground: oklch(0.985 0 0); /* White */
 
-  --primary: 169 29 33;      /* Deep Red #A91D21 */
-  --primary-foreground: 255 255 255; /* White */
+  --primary: oklch(0.65 0.25 30); /* Bold Red */
+  --primary-foreground: oklch(0.98 0 0);
 
-  --secondary: 24 24 27; /* A dark gray for cards */
-  --secondary-foreground: 255 255 255; /* White */
+  --secondary: oklch(0.85 0.20 95); /* Gold/Yellow */
+  --secondary-foreground: oklch(0.15 0 0);
 
-  --muted: 39 39 42;
-  --muted-foreground: 161 161 170;
-  
-  --accent: 253 184 19;      /* Accent Yellow #FDB813 */
-  --accent-foreground: 59 47 47; /* Dark Brown */
-  
-  --destructive: 185 28 28;
-  --destructive-foreground: 255 255 255;
-  
-  --card: 24 24 27;
-  --card-foreground: 255 255 255;
-  --popover: 24 24 27;
-  --popover-foreground: 255 255 255;
-  
-  --border: 39 39 42;
-  --input: 39 39 42;
-  --ring: 169 29 33;
+  --accent: oklch(0.70 0.20 140); /* Green */
+  --accent-foreground: oklch(0.98 0 0);
+
+  --card: oklch(0.20 0.02 35);
+  --card-foreground: oklch(0.98 0 0);
+
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.70 0 0);
+
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+
+  --border: oklch(0.33 0.04 35);
+  --input: oklch(0.33 0.04 35);
+  --ring: oklch(0.85 0.20 95); /* Gold ring/glow */
+
+  --sidebar: oklch(0.18 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+
+  --sidebar-primary: oklch(0.65 0.25 30); /* Red */
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+
+  --sidebar-accent: oklch(0.70 0.20 140); /* Green */
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+
+  --sidebar-border: oklch(0.33 0.04 35);
+  --sidebar-ring: oklch(0.85 0.20 95); /* Gold */
 }
-/* --- UPDATED COLORS END HERE --- */
-
 
 @theme inline {
+  /* This section maps CSS variables to Tailwind theme tokens */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
+
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
+
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 }
 
 @layer base {
