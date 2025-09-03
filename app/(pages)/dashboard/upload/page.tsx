@@ -19,10 +19,9 @@ export default function UploadPage() {
   const [price, setPrice] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Protect the route by checking for a login token
+    // Protect this route client-side
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/login');
@@ -30,7 +29,7 @@ export default function UploadPage() {
   }, [router]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if (e.target.files && e.target.files.length > 0) {
       setVideoFile(e.target.files[0]);
     }
   };
@@ -38,10 +37,9 @@ export default function UploadPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!videoFile) {
-      setError('Please select a video file to upload.');
+      toast.error('Please select a video file to upload.');
       return;
     }
-    setError(null);
     setIsLoading(true);
 
     const formData = new FormData();
@@ -61,8 +59,8 @@ export default function UploadPage() {
       router.push('/dashboard');
     } catch (err: any) {
       console.error('Upload error:', err);
-      setError(err.response?.data?.detail || "An error occurred during upload.");
-      toast.error('Upload failed. Please try again.');
+      const errorMessage = err.response?.data?.detail || "An error occurred during upload.";
+      toast.error(`Upload failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -71,15 +69,15 @@ export default function UploadPage() {
   return (
     <>
       <Toaster position="top-center" />
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background flex flex-col">
         <header className="bg-secondary text-secondary-foreground px-6 py-4 shadow-md">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <Logo />
             <Button asChild variant="secondary"><Link href="/dashboard">Back to Dashboard</Link></Button>
           </div>
         </header>
-        <main className="container mx-auto py-12 px-6">
-          <Card className="max-w-3xl mx-auto bg-secondary">
+        <main className="container mx-auto py-12 px-6 flex-grow flex items-center justify-center">
+          <Card className="w-full max-w-2xl bg-secondary">
             <CardHeader>
               <CardTitle className="font-heading text-3xl">Upload New Film</CardTitle>
               <CardDescription>Fill in the details below to submit your film for review.</CardDescription>
@@ -101,9 +99,8 @@ export default function UploadPage() {
                 <div>
                   <label htmlFor="videoFile" className="block text-sm font-medium text-muted-foreground mb-2">Video File</label>
                   <Input id="videoFile" type="file" required onChange={handleFileChange} accept="video/mp4,video/x-m4v,video/*" />
-                  <p className="text-xs text-muted-foreground mt-1">Max file size: 2GB. Supported formats: MP4, MOV.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Max file size depends on server configuration.</p>
                 </div>
-                {error && <p className="text-sm text-accent text-center">{error}</p>}
                 <div>
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? 'Uploading...' : 'Submit Film for Review'}
