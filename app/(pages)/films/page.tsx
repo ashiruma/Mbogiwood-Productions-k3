@@ -5,7 +5,7 @@ import FilmList from "@/components/FilmList";
 
 async function getAllFilms(): Promise<{ promo_films: Film[], paid_films: Film[] }> {
   try {
-    const response = await apiClient.get("/films/");
+    const response = await apiClient.get("/api/films/");
     return response.data;
   } catch (error) {
     console.error("Failed to fetch films:", error);

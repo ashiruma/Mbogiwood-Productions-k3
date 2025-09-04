@@ -57,37 +57,95 @@ export default async function Page() {
         </div>
       </section>
 
+     
       {/* ================= OUR PRODUCTION SERVICES ================= */}
-      <section className="py-16 bg-secondary">
+      <section className="py-16 bg-primary text-primary-foreground">
          <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h3 className="font-heading text-3xl font-bold text-foreground mb-4">Our Production Services</h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">From concept to final cut, we bring your vision to life with professional production services.</p>
+            <h3 className="font-heading text-3xl font-bold mb-4">Our Production Services</h3>
+            <p className="max-w-2xl mx-auto text-primary-foreground/80">From concept to final cut, we bring your vision to life with professional production services.</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <ServiceCard icon={Clapperboard} title="Film & TV Production" description="Full-service production for narrative films, series, and documentaries."/>
-            <ServiceCard icon={Music} title="Music Videos" description="Creative and high-quality music video production for artists."/>
-            <ServiceCard icon={Building} title="Corporate Commercials" description="Engaging video content to elevate your brand and message."/>
-            <ServiceCard icon={Video} title="Event Coverage" description="Professional multi-camera coverage for live events and conferences."/>
+            {/* --- THIS SECTION IS UPDATED WITH href PROP --- */}
+            <ServiceCard 
+              href="/services/film-production"
+              icon={Clapperboard} 
+              title="Film & TV Production" 
+              description="Full-service production for narrative films, series, and documentaries."/>
+            <ServiceCard 
+              href="/services/music-videos"
+              icon={Music} 
+              title="Music Videos" 
+              description="Creative and high-quality music video production for artists."/>
+            <ServiceCard 
+              href="/services/corporate-commercials"
+              icon={Building} 
+              title="Corporate Commercials" 
+              description="Engaging video content to elevate your brand and message."/>
+            <ServiceCard 
+              href="/services/event-coverage"
+              icon={Video} 
+              title="Event Coverage" 
+              description="Professional multi-camera coverage for live events and conferences."/>
+            {/* ----------------------------------------------- */}
           </div>
         </div>
       </section>
 
       {/* ================= WHAT WE OFFER ================= */}
-      <section className="py-16 bg-background">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h3 className="font-heading text-3xl font-bold text-foreground mb-4">What We Offer</h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">Explore African cinema and entertainment industry opportunities</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground"><CardContent className="p-6"><div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"><Play className="w-6 h-6 text-primary-foreground" /></div><h4 className="font-heading text-xl font-semibold text-foreground mb-2">Premium Films</h4><p className="text-muted-foreground">Stream exclusive African films and documentaries</p></CardContent></Card>
-            <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground"><CardContent className="p-6"><div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-4"><Briefcase className="w-6 h-6 text-accent-foreground" /></div><h4 className="font-heading text-xl font-semibold text-foreground mb-2">Career Hub</h4><p className="text-muted-foreground">Find jobs and opportunities in film & entertainment</p></CardContent></Card>
-            <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground"><CardContent className="p-6"><div className="w-12 h-12 bg-destructive rounded-full flex items-center justify-center mx-auto mb-4"><ImageIcon className="w-6 h-6 text-destructive-foreground" /></div><h4 className="font-heading text-xl font-semibold text-foreground mb-2">Gallery</h4><p className="text-muted-foreground">Behind-the-scenes content, stills & moments</p></CardContent></Card>
-            <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground"><CardContent className="p-6"><div className="w-12 h-12 bg-foreground rounded-full flex items-center justify-center mx-auto mb-4"><Users className="w-6 h-6 text-background" /></div><h4 className="font-heading text-xl font-semibold text-foreground mb-2">Community</h4><p className="text-muted-foreground">Connect with filmmakers and enthusiasts</p></CardContent></Card>
-          </div>
-        </div>
-      </section>
+<section className="py-16 bg-background">
+  <div className="max-w-7xl mx-auto px-6">
+    <div className="text-center mb-12">
+      <h3 className="font-heading text-3xl font-bold text-foreground mb-4">What We Offer</h3>
+      <p className="text-muted-foreground max-w-2xl mx-auto">Explore African cinema and entertainment industry opportunities</p>
+    </div>
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* --- Card 1: Premium Films --- */}
+      <Link href="/films" className="block h-full">
+        <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground h-full">
+          <CardContent className="p-6">
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-4"><Play className="w-6 h-6 text-primary-foreground" /></div>
+            <h4 className="font-heading text-xl font-semibold text-foreground mb-2">Premium Films</h4>
+            <p className="text-muted-foreground">Stream exclusive African films and documentaries</p>
+          </CardContent>
+        </Card>
+      </Link>
+      
+      {/* --- Card 2: Career Hub --- */}
+      <Link href="/jobs" className="block h-full">
+        <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground h-full">
+          <CardContent className="p-6">
+            <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-4"><Briefcase className="w-6 h-6 text-accent-foreground" /></div>
+            <h4 className="font-heading text-xl font-semibold text-foreground mb-2">Career Hub</h4>
+            <p className="text-muted-foreground">Find jobs and opportunities in film & entertainment</p>
+          </CardContent>
+        </Card>
+      </Link>
+
+      {/* --- Card 3: Gallery --- */}
+      <Link href="/gallery" className="block h-full">
+        <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground h-full">
+          <CardContent className="p-6">
+            <div className="w-12 h-12 bg-destructive rounded-full flex items-center justify-center mx-auto mb-4"><ImageIcon className="w-6 h-6 text-destructive-foreground" /></div>
+            <h4 className="font-heading text-xl font-semibold text-foreground mb-2">Gallery</h4>
+            <p className="text-muted-foreground">Behind-the-scenes content, stills & moments</p>
+          </CardContent>
+        </Card>
+      </Link>
+
+      {/* --- Card 4: Community --- */}
+      <Link href="/community" className="block h-full">
+        <Card className="text-center hover:shadow-xl transition-shadow bg-card text-card-foreground h-full">
+          <CardContent className="p-6">
+            <div className="w-12 h-12 bg-foreground rounded-full flex items-center justify-center mx-auto mb-4"><Users className="w-6 h-6 text-background" /></div>
+            <h4 className="font-heading text-xl font-semibold text-foreground mb-2">Community</h4>
+            <p className="text-muted-foreground">Connect with filmmakers and enthusiasts</p>
+          </CardContent>
+        </Card>
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* ================= WATCH OUR FILMS ================= */}
       <section className="py-16 bg-secondary">

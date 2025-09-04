@@ -6,6 +6,7 @@ type ServiceCardProps = {
   icon: LucideIcon;
   title: string;
   description: string;
+  href: string;
 };
 
 export default function ServiceCard({ icon: Icon, title, description }: ServiceCardProps) {

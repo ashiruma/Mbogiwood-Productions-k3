@@ -19,6 +19,10 @@ type AboutData = {
     vision_statement: string;
     our_values: string;
     team_members: TeamMember[];
+    films_featured: number;
+    professionals_connected: string;
+    countries_reached: number;
+    hours_watched: string;
 };
 
 // --- Data Fetching ---
@@ -83,20 +87,21 @@ export default async function AboutPage() {
         </section>
 
         {/* Stats */}
-        <section className="py-16 bg-secondary">
-            <div className="container mx-auto px-6">
-                <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold text-foreground mb-4">Our Impact</h2>
-                    <p className="text-muted-foreground max-w-2xl mx-auto">Since our launch, we've been proud to support the African film industry</p>
-                </div>
-                <div className="grid md:grid-cols-4 gap-8 text-center">
-                    <div><div className="text-4xl font-bold text-primary mb-2">500+</div><div className="text-muted-foreground">Films Featured</div></div>
-                    <div><div className="text-4xl font-bold text-primary mb-2">10K+</div><div className="text-muted-foreground">Professionals Connected</div></div>
-                    <div><div className="text-4xl font-bold text-primary mb-2">50+</div><div className="text-muted-foreground">Countries Reached</div></div>
-                    <div><div className="text-4xl font-bold text-primary mb-2">1M+</div><div className="text-muted-foreground">Hours Watched</div></div>
-                </div>
-            </div>
-        </section>
+          
+      <section className="py-16 bg-secondary">
+          <div className="max-w-7xl mx-auto px-6">
+              <div className="text-center mb-12">
+                  <h2 className="text-3xl font-bold text-foreground mb-4">Our Impact</h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto">Since our launch, we've been proud to support the African film industry</p>
+              </div>
+              <div className="grid md:grid-cols-4 gap-8 text-center">
+                  <div><div className="text-4xl font-bold text-primary mb-2">{data.films_featured}+</div><div className="text-muted-foreground">Films Featured</div></div>
+                  <div><div className="text-4xl font-bold text-primary mb-2">{data.professionals_connected}+</div><div className="text-muted-foreground">Professionals Connected</div></div>
+                  <div><div className="text-4xl font-bold text-primary mb-2">{data.countries_reached}+</div><div className="text-muted-foreground">Countries Reached</div></div>
+                  <div><div className="text-4xl font-bold text-primary mb-2">{data.hours_watched}+</div><div className="text-muted-foreground">Hours Watched</div></div>
+              </div>
+          </div>
+      </section>
 
         {/* Team */}
         <section className="py-16 bg-background">

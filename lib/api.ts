@@ -11,7 +11,6 @@ const apiClient = axios.create({
 // Use an interceptor to add the auth token to every request
 apiClient.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
-    // Check if running in a browser environment before accessing localStorage
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('authToken');
       if (token) {
