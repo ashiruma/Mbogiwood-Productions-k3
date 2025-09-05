@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Mail } from "lucide-react";
 
 export default function Footer() {
@@ -31,7 +32,13 @@ export default function Footer() {
                     <div>
                         <h5 className="font-heading font-semibold mb-4">Connect</h5>
                         <p className="text-muted-foreground mb-4">Stay updated with the latest from Mbogiwood</p>
-                        <Button><Mail className="w-4 h-4 mr-2" />Subscribe</Button>
+                        <form className="flex space-x-2">
+                            <Input type="email" placeholder="Your email" required />
+                            <Button type="submit">
+                                <Mail className="w-4 h-4" />
+                                <span className="sr-only">Subscribe</span>
+                            </Button>
+                        </form>
                     </div>
                 </div>
                 <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground"><p>&copy; 2025 Mbogiwood Productions. All rights reserved.</p></div>
