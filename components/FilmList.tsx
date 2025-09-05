@@ -1,36 +1,41 @@
-// components/FilmList.tsx
+// FILE: components/FilmList.tsx
+"use client";
+
 import { Film } from "@/types";
-import FilmCard from "./FilmCard";
+import Image from "next/image";
+import Link from "next/link";
 
-type FilmListProps = {
-  title: string;
-  films: Film[];
-};
-
-export default function FilmList({ title, films }: FilmListProps) {
-  // ✅ Ensure only valid films are passed to FilmCard
-  const validFilms = (films || []).filter(
-    (film): film is Film =>
-      !!film &&
-      typeof film.id === "number" &&
-      typeof film.title === "string" &&
-      film.title.trim().length > 0
-  );
-
-  if (validFilms.length === 0) {
-    return null; // Don’t render if nothing valid
-  }
+export default function FilmList({ title, films }: { title: string; films: Film[] }) {
+  if (!films || films.length === 0) return null;
 
   return (
-    <div className="mb-12">
-      <h3 className="font-heading text-3xl font-bold text-foreground mb-4">
-        {title}
-      </h3>
-      <div className="grid md:grid-cols-3 gap-8">
-        {validFilms.map((film) => (
-          <FilmCard key={film.id} film={film} />
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold text-foreground mb-6">{title}</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {films.map((film) => (
+          <Link key={film.id} href={`/films/${film.slug}`}>
+            <div className="group cursor-pointer bg-card rounded-xl shadow hover:shadow-lg overflow-hidden transition">
+              {film.poster_url ? (
+                <Image
+                  src={film.poster_url}
+                  alt={film.title}
+                  width={300}
+                  height={450}
+                  className="w-full h-64 object-cover group-hover:scale-105 transition"
+                />
+              ) : (
+                <div className="w-full h-64 bg-muted flex items-center justify-center text-muted-foreground">
+                  No Poster
+                </div>
+              )}
+              <div className="p-3">
+                <h3 className="text-sm font-semibold truncate">{film.title}</h3>
+                <p className="text-xs text-muted-foreground">{film.filmmaker_name}</p>
+              </div>
+            </div>
+          </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

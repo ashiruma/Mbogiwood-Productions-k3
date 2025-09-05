@@ -1,95 +1,148 @@
-// app/(pages)/films/[slug]/page.tsx
+// FILE: app/(pages)/films/[slug]/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import apiClient from "@/lib/api";
 import { Film } from "@/types";
-import { Separator } from "@/components/ui/separator";
-import { Clock, Star } from "lucide-react";
-import FilmPurchaseClient from "@/components/FilmPurchaseClient";
-import ReviewsSection from "@/components/ReviewsSection";
-import { Toaster } from 'react-hot-toast';
+import Image from "next/image";
+import Link from "next/link";
 
-async function getFilmDetail(slug: string): Promise<Film | null> {
-  try {
-    const response = await apiClient.get(`/films/${slug}/`);
-    return response.data;
-  } catch (error) {
-    console.error(`Failed to fetch film with slug ${slug}:`, error);
-    return null;
-  }
-}
+export default function FilmDetailPage() {
+  const { slug } = useParams<{ slug: string }>();
+  const router = useRouter();
 
-export default async function FilmDetailPage({ params }: { params: { slug: string } }) {
-  const resolvedParams = await params;
-  const film = await getFilmDetail(resolvedParams.slug);
+  const [film, setFilm] = useState<Film | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
 
-  if (!film) {
+  useEffect(() => {
+    async function fetchFilm() {
+      try {
+        const response = await apiClient.get(`/films/api/${slug}/`);
+        setFilm(response.data);
+      } catch (error) {
+        console.error("Failed to fetch film:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slug) fetchFilm();
+  }, [slug]);
+
+  const handleWatch = () => {
+    if (!film) return;
+    router.push(`/films/api/${film.slug}/stream/`); // 🔑 backend stream endpoint
+  };
+
+  const handleMpesaPayment = async () => {
+    if (!film) return;
+
+    try {
+      setProcessing(true);
+      const res = await apiClient.post(`/films/api/pay/${film.slug}/`);
+
+      if (res.data.checkout_url) {
+        // Online checkout flow
+        window.location.href = res.data.checkout_url;
+      } else {
+        // STK push flow
+        alert("M-Pesa payment request sent to your phone. Confirm to continue.");
+      }
+    } catch (err) {
+      console.error("Payment failed:", err);
+      alert("Payment could not be initiated. Try again.");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  if (loading) {
     return (
-      <main className="container mx-auto py-12 px-6">
-        <div className="text-center">
-            <h1 className="text-2xl font-bold">Film not found.</h1>
-        </div>
+      <main className="container mx-auto py-12 px-6 text-center">
+        <p className="text-muted-foreground">Loading film...</p>
       </main>
     );
   }
 
-  // Ensure trailer_link is not null before trying to replace
-  const embedUrl = film.trailer_link ? film.trailer_link.replace("watch?v=", "embed/") : "";
+  if (!film) {
+    return (
+      <main className="container mx-auto py-12 px-6 text-center">
+        <p className="text-muted-foreground">Film not found.</p>
+        <Link href="/films" className="text-primary underline">
+          Back to films
+        </Link>
+      </main>
+    );
+  }
 
   return (
-    <>
-      <Toaster position="top-center" />
-      <main className="container mx-auto py-8 sm:py-12 px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 md:gap-12">
-          
-          <div className="md:col-span-1 lg:col-span-1">
-            <img 
-              src={film.poster_image || 'https://via.placeholder.com/500x750.png?text=No+Poster'} 
-              alt={`Poster for ${film.title}`}
-              className="rounded-lg shadow-lg w-full"
+    <main className="container mx-auto py-12 px-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        {/* Film Poster */}
+        {film.poster_url && (
+          <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden shadow-md">
+            <Image
+              src={film.poster_url}
+              alt={film.title}
+              fill
+              className="object-cover"
+              priority
             />
-            <FilmPurchaseClient film={film} />
           </div>
-          
-          <div className="md:col-span-2 lg:col-span-3">
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold mb-2">{film.title}</h1>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4 text-muted-foreground">
-              <div className="flex items-center"><Star className="w-4 h-4 mr-1 text-accent" /> 4.8</div>
-              <div className="flex items-center"><Clock className="w-4 h-4 mr-1" /> 1h 45m</div>
-              <span>{film.category?.name || 'Drama'}</span>
-              <span>{film.release_date ? new Date(film.release_date).getFullYear() : '2024'}</span>
-            </div>
-            <Separator className="my-6" />
+        )}
 
-            <div className="mb-8">
-              <h2 className="text-2xl font-semibold mb-4">Watch Trailer</h2>
-              {film.trailer_link ? (
-                 <div className="aspect-video overflow-hidden rounded-lg">
-                    <iframe 
-                      className="w-full h-full"
-                      src={embedUrl} // <-- THIS LINE IS THE FIX
-                      title="YouTube video player" 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                      allowFullScreen>
-                    </iframe>
-                 </div>
-              ) : (
-                <div className="aspect-video bg-secondary rounded-lg flex items-center justify-center">
-                  <p className="text-muted-foreground">No trailer available.</p>
-                </div>
-              )}
-            </div>
+        {/* Film Details */}
+        <div>
+          <h1 className="font-heading text-4xl font-bold mb-4">
+            {film.title}
+          </h1>
+          <p className="text-muted-foreground mb-4">{film.description}</p>
 
-            <h2 className="text-2xl font-semibold mb-4">Synopsis</h2>
-            <p className="text-secondary-foreground leading-relaxed">
-              {film.description}
+          {film.category?.name && (
+            <p className="mb-2 text-sm text-muted-foreground">
+              Category: {film.category.name}
             </p>
+          )}
+
+          {film.price_cents > 0 ? (
+            <p className="text-lg font-semibold mb-6">
+              Price: ${(film.price_cents / 100).toFixed(2)}
+            </p>
+          ) : (
+            <p className="text-lg font-semibold mb-6 text-green-600">
+              Free to Watch
+            </p>
+          )}
+
+          {/* Buttons */}
+          <div className="flex gap-4">
+            {film.price_cents > 0 ? (
+              <button
+                onClick={handleMpesaPayment}
+                disabled={processing}
+                className="px-6 py-3 bg-primary text-white rounded-xl hover:bg-primary/90 transition"
+              >
+                {processing ? "Processing..." : "Pay with M-Pesa"}
+              </button>
+            ) : (
+              <button
+                onClick={handleWatch}
+                className="px-6 py-3 bg-secondary text-white rounded-xl hover:bg-secondary/90 transition"
+              >
+                Watch Now
+              </button>
+            )}
+            <Link
+              href="/films"
+              className="px-6 py-3 bg-muted text-foreground rounded-xl hover:bg-muted/80 transition"
+            >
+              Back
+            </Link>
           </div>
         </div>
-
-        <Separator className="my-12" />
-        
-        <ReviewsSection filmSlug={film.slug} />
-      </main>
-    </>
+      </div>
+    </main>
   );
 }

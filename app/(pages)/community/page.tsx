@@ -1,83 +1,196 @@
-// app/(pages)/community/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import apiClient from "@/lib/api";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star } from "lucide-react";
-import ChatRoom from "@/components/ChatRoom";
+import { useSession } from "next-auth/react";
 
-type User = { full_name: string; };
-type Review = { id: number; user: User; rating: number; comment: string; created_at: string; };
-
-async function getLatestReviews(): Promise<Review[]> {
-    try {
-        const response = await apiClient.get('/reviews/latest/');
-        return response.data;
-    } catch (error) {
-        console.error("Failed to fetch latest reviews:", error);
-        return [];
-    }
+interface Comment {
+  id: number;
+  user: string;
+  body: string;
+  created_at: string;
 }
 
-const StarRating = ({ rating }: { rating: number }) => (
-    <div className="flex items-center">
-        {[...Array(5)].map((_, i) => (
-            <Star key={i} className={`w-4 h-4 ${i < rating ? 'text-primary fill-current' : 'text-muted-foreground'}`} />
-        ))}
-    </div>
-);
+interface Post {
+  id: number;
+  user: string;
+  title: string;
+  body: string;
+  category: string;
+  created_at: string;
+  updated_at: string;
+  like_count: number;
+  comment_count: number;
+  comments: Comment[];
+}
 
-export default async function CommunityPage() {
-    const reviews = await getLatestReviews();
+export default function CommunityPage() {
+  const { data: session } = useSession();
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [newPost, setNewPost] = useState({ title: "", body: "", category: "" });
+  const [loading, setLoading] = useState(true);
 
-    return (
-        <main className="container mx-auto py-12 px-6">
-            <section className="text-center mb-16">
-                <h1 className="font-heading text-4xl sm:text-5xl font-bold text-foreground mb-4">Community Hub</h1>
-                <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-                    See what others are saying and join the conversation in our live chat.
-                </p>
-            </section>
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const res = await apiClient.get("/community/posts/");
+        setPosts(res.data);
+      } catch (err) {
+        console.error("Failed to fetch posts:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchPosts();
+  }, []);
 
-            <div className="grid lg:grid-cols-3 gap-8">
-                {/* --- Column for Live Chat --- */}
-                <div className="lg:col-span-1">
-                    <ChatRoom roomName="general" />
-                </div>
+  async function createPost(e: React.FormEvent) {
+    e.preventDefault();
+    try {
+      const res = await apiClient.post("/community/posts/", newPost);
+      setPosts([res.data, ...posts]);
+      setNewPost({ title: "", body: "", category: "" });
+    } catch (err) {
+      console.error("Error creating post:", err);
+    }
+  }
 
-                {/* --- Column for Recent Reviews --- */}
-                <div className="lg:col-span-2">
-                    <h2 className="font-heading text-2xl font-bold mb-4">Recent Reviews</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {reviews.length > 0 ? reviews.map(review => (
-                            <Card key={review.id} className="bg-secondary flex flex-col">
-                                <CardHeader>
-                                    <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold">
-                                                {review.user.full_name.charAt(0)}
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold">{review.user.full_name}</p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {new Date(review.created_at).toLocaleDateString()}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <StarRating rating={review.rating} />
-                                    </div>
-                                </CardHeader>
-                                <CardContent className="flex-grow">
-                                    <p className="text-muted-foreground italic">"{review.comment}"</p>
-                                </CardContent>
-                                <CardFooter>
-                                    <p className="text-xs text-primary">on Film Title</p>
-                                </CardFooter>
-                            </Card>
-                        )) : (
-                            <p className="text-muted-foreground col-span-full text-center">No reviews have been submitted yet.</p>
-                        )}
-                    </div>
-                </div>
+  async function toggleLike(postId: number) {
+    try {
+      await apiClient.post(`/community/posts/${postId}/toggle-like/`);
+      setPosts(
+        posts.map((p) =>
+          p.id === postId
+            ? { ...p, like_count: p.like_count + (p.like_count ? -1 : 1) }
+            : p
+        )
+      );
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  }
+
+  async function addComment(postId: number, body: string) {
+    try {
+      const res = await apiClient.post("/community/comments/", {
+        post_id: postId,
+        body,
+      });
+      setPosts(
+        posts.map((p) =>
+          p.id === postId
+            ? { ...p, comments: [...p.comments, res.data] }
+            : p
+        )
+      );
+    } catch (err) {
+      console.error("Error adding comment:", err);
+    }
+  }
+
+  if (loading) return <p className="text-center">Loading posts...</p>;
+
+  return (
+    <main className="container mx-auto py-12 px-6">
+      <h1 className="text-3xl font-bold mb-6">Community</h1>
+
+      {/* Create Post */}
+      {session && (
+        <form onSubmit={createPost} className="mb-8 space-y-4">
+          <input
+            type="text"
+            placeholder="Title"
+            value={newPost.title}
+            onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <textarea
+            placeholder="What's on your mind?"
+            value={newPost.body}
+            onChange={(e) => setNewPost({ ...newPost, body: e.target.value })}
+            className="w-full p-2 border rounded"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Category"
+            value={newPost.category}
+            onChange={(e) =>
+              setNewPost({ ...newPost, category: e.target.value })
+            }
+            className="w-full p-2 border rounded"
+          />
+          <button
+            type="submit"
+            className="px-6 py-2 bg-primary text-white rounded"
+          >
+            Post
+          </button>
+        </form>
+      )}
+
+      {/* Posts */}
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <div
+            key={post.id}
+            className="p-4 border rounded-lg shadow-sm bg-card"
+          >
+            <h2 className="text-xl font-semibold">{post.title}</h2>
+            <p className="text-sm text-muted-foreground">
+              by {post.user} | {new Date(post.created_at).toLocaleString()}
+            </p>
+            <p className="mt-2">{post.body}</p>
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={() => toggleLike(post.id)}
+                className="text-sm text-primary"
+              >
+                👍 {post.like_count}
+              </button>
+              <span className="text-sm">
+                💬 {post.comment_count}
+              </span>
             </div>
-        </main>
-    );
+
+            {/* Comments */}
+            <div className="mt-4 space-y-2">
+              {post.comments.map((c) => (
+                <div key={c.id} className="text-sm border-t pt-2">
+                  <strong>{c.user}:</strong> {c.body}
+                </div>
+              ))}
+            </div>
+
+            {/* Add comment */}
+            {session && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const body = (e.currentTarget.elements.namedItem(
+                    "comment"
+                  ) as HTMLInputElement).value;
+                  if (body) {
+                    addComment(post.id, body);
+                    (e.currentTarget.elements.namedItem(
+                      "comment"
+                    ) as HTMLInputElement).value = "";
+                  }
+                }}
+                className="mt-2"
+              >
+                <input
+                  type="text"
+                  name="comment"
+                  placeholder="Write a comment..."
+                  className="w-full p-2 border rounded"
+                />
+              </form>
+            )}
+          </div>
+        ))}
+      </div>
+    </main>
+  );
 }
