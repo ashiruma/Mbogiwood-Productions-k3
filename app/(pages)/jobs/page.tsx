@@ -6,7 +6,7 @@ type Job = { id: number; title: string; company: string; location: string; descr
 
 async function getJobs(): Promise<Job[]> {
   try {
-    const response = await apiClient.get("/jobs/");
+    const response = await apiClient.get("/api/jobs");
     return Array.isArray(response.data) ? response.data : [];
   } catch (error) {
     console.error("Failed to fetch jobs:", error);

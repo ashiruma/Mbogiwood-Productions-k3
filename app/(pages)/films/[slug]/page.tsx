@@ -19,7 +19,7 @@ export default function FilmDetailPage() {
   useEffect(() => {
     async function fetchFilm() {
       try {
-        const response = await apiClient.get(`/films/api/${slug}/`);
+        const response = await apiClient.get(`/api/films/${slug}/`);
         setFilm(response.data);
       } catch (error) {
         console.error("Failed to fetch film:", error);
@@ -41,7 +41,7 @@ export default function FilmDetailPage() {
 
     try {
       setProcessing(true);
-      const res = await apiClient.post(`/films/api/pay/${film.slug}/`);
+      const res = await apiClient.post(`/api/films/pay/${film.slug}/`);
 
       if (res.data.checkout_url) {
         // Online checkout flow

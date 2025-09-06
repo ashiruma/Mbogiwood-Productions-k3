@@ -93,7 +93,7 @@ export default function AllFilmsPage() {
   useEffect(() => {
     async function fetchFilms() {
       try {
-        const response = await apiClient.get("/films/api/");
+        const response = await apiClient.get("/api/films/");
         const data = response.data;
 
         setPromoFilms(Array.isArray(data.promo_films) ? data.promo_films : []);

@@ -19,3 +19,8 @@ export type Film = {
   price: string;
   status: FilmStatus; // ✅ now required, since backend will provide it
 };
+export type RevenueData = {
+    total_revenue_cents: number;
+    total_paid_out_cents: number;
+    current_balance_cents: number;
+};

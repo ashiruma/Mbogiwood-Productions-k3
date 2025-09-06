@@ -28,7 +28,7 @@ type AboutData = {
 // --- Data Fetching ---
 async function getAboutData(): Promise<AboutData | null> {
     try {
-        const response = await apiClient.get('/about/');
+        const response = await apiClient.get('/api/about/');
         return response.data;
     } catch (error) {
         console.error("Failed to fetch about data:", error);

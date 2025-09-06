@@ -20,7 +20,7 @@ export default function GalleryPage() {
   useEffect(() => {
     const getImages = async () => {
       try {
-        const response = await apiClient.get('/gallery/');
+        const response = await apiClient.get('/api/gallery/');
         setImages(response.data);
       } catch (error) {
         console.error("Failed to fetch gallery images:", error);
