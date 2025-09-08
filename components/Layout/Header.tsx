@@ -7,11 +7,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 
 export default function Header() {
-    // Centralized nav links for consistency
     const navLinks = [
         { href: "/films", label: "Films" },
         { href: "/jobs", label: "Jobs" },
         { href: "/gallery", label: "Gallery" },
+        { href: "/coproduction", label: "Co-Production" }, // <-- ADD THIS LINE
+        { href: "/news", label: "News" },
         { href: "/about", label: "About Us" },
         { href: "/contact", label: "Contact" },
     ];
