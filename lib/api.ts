@@ -1,11 +1,8 @@
-// FILE: lib/api.ts (Updated)
-import axios from 'axios';
+import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://mbogiwood-core-api.onrender.com",
+  withCredentials: false,
 });
 
 export default apiClient;
