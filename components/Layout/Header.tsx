@@ -5,6 +5,7 @@ import Logo from "@/components/Logo";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import Header from '@/components/layout/Header';
 
 export default function Header() {
     const navLinks = [
