@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react'; // 1. Import useSession
-import useAxiosAuth from '@/hook/useAxiosAuth'; // 2. Import our auth hook
+import useAxiosAuth from '@/hooks/useAxiosAuth'; // 2. Import our auth hook
 import { Film } from '@/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
