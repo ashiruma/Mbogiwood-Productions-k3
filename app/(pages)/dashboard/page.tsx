@@ -1,9 +1,9 @@
-// app/(pages)/dashboard/page.tsx
+// app/(pages)/dashboard/page.tsx (Updated)
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import apiClient from '@/lib/api';
+import { useSession } from 'next-auth/react'; // 1. Import useSession
+import useAxiosAuth from '@/hooks/useAxiosAuth'; // 2. Import our auth hook
 import { Film } from '@/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { PlusCircle, Info } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-// Define a type for the user to get their role
 type User = {
   email: string;
   full_name: string;
@@ -19,44 +18,46 @@ type User = {
 }
 
 export default function DashboardPage() {
-  const router = useRouter();
+  // 3. Use NextAuth to protect the page and get the session
+  const { data: session, status } = useSession({
+    required: true, // This automatically redirects to /login if not authenticated
+  });
+  const axiosAuth = useAxiosAuth(); // Get the authenticated API client
+
+  // Your state management remains the same
   const [films, setFilms] = useState<Film[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      router.push('/login');
-      return;
-    }
+    // This effect runs once the session is loaded
+    if (session) {
+      const fetchDashboardData = async () => {
+        try {
+          // 4. All API calls now use 'axiosAuth' and are automatically secure
+          const userResponse = await axiosAuth.get('/auth/users/me/');
+          setUser(userResponse.data);
 
-    const fetchDashboardData = async () => {
-      try {
-        // First, get the user's details to check their role
-        const userResponse = await apiClient.get('/users/me/');
-        setUser(userResponse.data);
-
-        // If they are a filmmaker, fetch their films
-        if (userResponse.data.role === 'filmmaker') {
-          const filmsResponse = await apiClient.get('/films/dashboard/my-films/');
-          setFilms(filmsResponse.data);
+          if (userResponse.data.role === 'filmmaker') {
+            const filmsResponse = await axiosAuth.get('/films/dashboard/my-films/');
+            setFilms(filmsResponse.data);
+          }
+        } catch (err) {
+          setError("Could not load your dashboard data.");
+          console.error(err);
         }
-      } catch (err) {
-        setError("Could not load your dashboard data.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      };
 
-    fetchDashboardData();
-  }, [router]);
+      fetchDashboardData();
+    }
+  }, [session, axiosAuth]); // Depend on the session
 
-  if (isLoading) {
+  // 5. Use NextAuth's status for a clean loading state
+  if (status === 'loading' || !user) {
     return <main className="container mx-auto py-12 px-6 text-center"><p>Loading Dashboard...</p></main>;
   }
 
+  // Your entire JSX return statement is perfect and does not need to change
   return (
     <main className="container mx-auto py-8 sm:py-12 px-6">
       <div className="flex items-center justify-between mb-8">
@@ -64,7 +65,6 @@ export default function DashboardPage() {
             <h1 className="font-heading text-3xl font-bold">Dashboard</h1>
             {user && <p className="text-muted-foreground">Welcome, {user.full_name || user.email}</p>}
         </div>
-        {/* Only show the Upload button if the user is a filmmaker */}
         {user?.role === 'filmmaker' && (
              <Button asChild>
                 <Link href="/dashboard/upload">
@@ -77,7 +77,6 @@ export default function DashboardPage() {
 
       {error && <div className="text-center py-16 bg-secondary rounded-lg"><p className="text-accent">{error}</p></div>}
 
-      {/* If user is a viewer, show the application prompt */}
       {user?.role === 'viewer' && (
           <Alert>
               <Info className="h-4 w-4" />
@@ -89,7 +88,6 @@ export default function DashboardPage() {
           </Alert>
       )}
 
-      {/* If user is a filmmaker, show their film list */}
       {user?.role === 'filmmaker' && (
         <div className="bg-secondary rounded-lg border border-border">
           <h2 className="font-heading text-xl font-bold p-6">My Films</h2>
