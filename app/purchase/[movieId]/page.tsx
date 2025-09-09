@@ -1,5 +1,5 @@
 import ConfirmPaymentButton from "@/components/ConfirmPaymentButton";
-import Header from "@/components/Header";
+import Header from "@/components/layout/Header";
 import Image from "next/image";
 
 interface PurchasePageProps {
