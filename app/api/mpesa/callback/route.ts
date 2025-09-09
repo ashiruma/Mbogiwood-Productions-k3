@@ -1,7 +1,7 @@
 // app/api/mpesa/callback/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import {prisma} from "@/lib/prisma";
 
 // Define the shape of the callback data from Safaricom
 interface MpesaCallbackBody {
