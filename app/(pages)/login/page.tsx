@@ -19,15 +19,21 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     try {
-      // --- THIS IS THE CORRECTED URL ---
-      const response = await apiClient.post('/users/auth/token/login/', { email, password });
+      // 1. CORRECTED THE API ENDPOINT
+      // This now points to the Djoser URL for creating a JWT token.
+      const response = await apiClient.post('/api/auth/jwt/create/', { email, password });
       
-      if (response.data.auth_token) {
-        localStorage.setItem('authToken', response.data.auth_token);
-        router.push('/dashboard');
+      // 2. CORRECTED THE TOKEN HANDLING
+      // Djoser returns 'access' and 'refresh' tokens, not 'auth_token'.
+      if (response.data.access) {
+        localStorage.setItem('accessToken', response.data.access);
+        localStorage.setItem('refreshToken', response.data.refresh);
+        // You might want to also set the default Authorization header for apiClient here
+        // apiClient.defaults.headers.common['Authorization'] = `JWT ${response.data.access}`;
+        router.push('/dashboard'); // Redirect to dashboard on success
       }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.non_field_errors?.[0] || "Login failed. Please check your credentials.";
+      const errorMessage = err.response?.data?.detail || "Login failed. Please check your credentials.";
       setError(errorMessage);
     }
   };
