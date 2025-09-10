@@ -69,7 +69,7 @@ export const authOptions: NextAuthOptions = {
           // STEP 2: USE ACCESS TOKEN TO FETCH USER DETAILS
           const userResponse = await fetch(`${DJANGO_API_URL}/api/auth/users/me/`, {
               headers: {
-                  'Authorization': `JWT ${authData.access}`
+                  'Authorization': `Bearer ${authData.access}` // This is CORRECT`
               }
           });
 
