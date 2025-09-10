@@ -35,11 +35,11 @@ export default function DashboardPage() {
       const fetchDashboardData = async () => {
         try {
           // 4. All API calls now use 'axiosAuth' and are automatically secure
-          const userResponse = await axiosAuth.get('/auth/users/me/');
+          const userResponse = await axiosAuth.get('/api/auth/users/me/');
           setUser(userResponse.data);
 
           if (userResponse.data.role === 'filmmaker') {
-            const filmsResponse = await axiosAuth.get('/films/dashboard/my-films/');
+            const filmsResponse = await axiosAuth.get('/api/films/dashboard/my-films/');
             setFilms(filmsResponse.data);
           }
         } catch (err) {
