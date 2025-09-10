@@ -1,8 +1,11 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "https://mbogiwood-core-api.onrender.com",
-  withCredentials: false,
+  // ✅ IMPORTANT: Set the base URL to your deployed backend API
+  baseURL: 'https://mbogiwood-core-api.onrender.com', 
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export default apiClient;

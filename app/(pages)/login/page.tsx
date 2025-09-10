@@ -1,4 +1,4 @@
-// app/(pages)/login/page.tsx
+// In: app/(pages)/login/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -13,28 +13,36 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false); // ✨ ADDED: Loading state
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true); // ✨ Set loading to true
+
     try {
-      // 1. CORRECTED THE API ENDPOINT
-      // This now points to the Djoser URL for creating a JWT token.
+      // Endpoint for Djoser JWT token creation
       const response = await apiClient.post('/api/auth/jwt/create/', { email, password });
       
-      // 2. CORRECTED THE TOKEN HANDLING
-      // Djoser returns 'access' and 'refresh' tokens, not 'auth_token'.
       if (response.data.access) {
-        localStorage.setItem('accessToken', response.data.access);
-        localStorage.setItem('refreshToken', response.data.refresh);
-        // You might want to also set the default Authorization header for apiClient here
-        // apiClient.defaults.headers.common['Authorization'] = `JWT ${response.data.access}`;
-        router.push('/dashboard'); // Redirect to dashboard on success
+        const { access, refresh } = response.data;
+        
+        // Store tokens in localStorage
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('refreshToken', refresh);
+        
+        // ✅ IMPORTANT: Set the Authorization header for all future requests
+        // Djoser + SimpleJWT use the 'Bearer' prefix
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+        
+        router.push('/dashboard'); // Redirect on success
       }
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail || "Login failed. Please check your credentials.";
       setError(errorMessage);
+    } finally {
+      setIsLoading(false); // ✨ Set loading to false when request is done
     }
   };
 
@@ -48,23 +56,26 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-muted-foreground">Email</label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} disabled={isLoading} />
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-muted-foreground">Password</label>
-            <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} disabled={isLoading} />
           </div>
-          {error && <p className="text-sm text-accent text-center">{error}</p>}
+          {error && <p className="text-sm text-destructive text-center">{error}</p>}
           <div>
-            <Button type="submit" className="w-full">Sign In</Button>
+            {/* ✨ Disable button and show loading text when submitting */}
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Signing In...' : 'Sign In'}
+            </Button>
           </div>
         </form>
-         <p className="text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link href="/register" className="font-medium text-primary hover:underline">
-              Sign Up
-            </Link>
-          </p>
+        <p className="text-center text-sm text-muted-foreground">
+          Don't have an account?{' '}
+          <Link href="/register" className="font-medium text-primary hover:underline">
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   );
