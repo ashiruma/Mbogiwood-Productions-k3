@@ -4,10 +4,13 @@ import NextAuth, { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-// This function will be used to refresh the access token
+// It's better practice to use a non-public variable for server-side fetches
+const DJANGO_API_URL = process.env.DJANGO_API_URL;
+
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jwt/refresh/`, {
+    // Note: Use DJANGO_API_URL for server-side calls
+    const response = await fetch(`${DJANGO_API_URL}/api/auth/jwt/refresh/`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh: token.refreshToken }),
@@ -22,8 +25,8 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
     return {
       ...token,
       accessToken: refreshedTokens.access,
-      accessTokenExpires: Date.now() + 5 * 60 * 1000, // 5 minutes
-      refreshToken: refreshedTokens.refresh ?? token.refreshToken,
+      accessTokenExpires: Date.now() + 5 * 60 * 1000, // 5 minutes from now
+      refreshToken: refreshedTokens.refresh ?? token.refreshToken, // Fall back to old refresh token
     };
   } catch (error) {
     console.error("RefreshAccessTokenError", error);
@@ -46,7 +49,8 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) return null;
 
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/jwt/create/`, {
+          // STEP 1: LOGIN TO GET TOKENS
+          const authResponse = await fetch(`${DJANGO_API_URL}/api/auth/jwt/create/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -55,19 +59,35 @@ export const authOptions: NextAuthOptions = {
             }),
           });
           
-          const data = await response.json();
+          const authData = await authResponse.json();
 
-          if (response.ok && data.access) {
-            // Return the full user object with tokens
-            return {
-              id: "1", // You can enhance this later to fetch user ID
-              email: credentials.email,
-              accessToken: data.access,
-              refreshToken: data.refresh,
-            };
+          if (!authResponse.ok || !authData.access) {
+            console.error("Failed to get tokens:", authData);
+            return null;
           }
           
-          return null;
+          // STEP 2: USE ACCESS TOKEN TO FETCH USER DETAILS
+          const userResponse = await fetch(`${DJANGO_API_URL}/api/auth/users/me/`, {
+              headers: {
+                  'Authorization': `JWT ${authData.access}`
+              }
+          });
+
+          if (!userResponse.ok) {
+              console.error("Failed to fetch user details");
+              return null;
+          }
+
+          const userData = await userResponse.json();
+          
+          // COMBINE USER DATA AND TOKENS
+          return {
+            id: userData.id,
+            email: userData.email,
+            name: userData.full_name,
+            accessToken: authData.access,
+            refreshToken: authData.refresh,
+          };
 
         } catch (error) {
           console.error("Authorize error:", error);
@@ -80,31 +100,44 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
+    // This callback is called whenever a JWT is created or updated.
     async jwt({ token, user }) {
-      // Initial sign in
+      // The `user` object is only passed on the initial sign-in.
       if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
         token.accessToken = user.accessToken;
         token.refreshToken = user.refreshToken;
-        token.accessTokenExpires = Date.now() + 5 * 60 * 1000; // 5 minutes
-        return token;
+        // Set an expiry time for the access token, e.g., 5 minutes
+        token.accessTokenExpires = Date.now() + 5 * 60 * 1000;
       }
 
-      // Return previous token if the access token has not expired yet
+      // If the access token has not expired, return it.
       if (Date.now() < (token.accessTokenExpires as number)) {
         return token;
       }
 
-      // Access token has expired, try to update it
+      // If the access token has expired, try to refresh it.
       return refreshAccessToken(token);
     },
+    // This callback is called whenever a session is checked.
     async session({ session, token }) {
+      // Pass user data and tokens to the session object
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+      }
       session.accessToken = token.accessToken;
       session.error = token.error;
+      
       return session;
     },
   },
   pages: {
     signIn: "/login",
+    error: "/auth/error", // Optional: Custom error page
   },
 };
 
