@@ -30,27 +30,29 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // This effect runs once the session is loaded
-    if (session) {
+    // This effect runs once the session is loaded and has an access token
+    if (session?.accessToken) {
       const fetchDashboardData = async () => {
         try {
-          // 4. All API calls now use 'axiosAuth' and are automatically secure
+          // CORRECTED URL for fetching user data
           const userResponse = await axiosAuth.get('/api/auth/users/me/');
           setUser(userResponse.data);
 
+          // Check the user's role and fetch films if they are a filmmaker
           if (userResponse.data.role === 'filmmaker') {
+            // CORRECTED URL for fetching filmmaker's films
             const filmsResponse = await axiosAuth.get('/api/films/dashboard/my-films/');
             setFilms(filmsResponse.data);
           }
         } catch (err) {
-          setError("Could not load your dashboard data.");
-          console.error(err);
+          setError("Could not load your dashboard data. Please try again later.");
+          console.error("Dashboard fetch error:", err);
         }
       };
 
       fetchDashboardData();
     }
-  }, [session, axiosAuth]); // Depend on the session
+  }, [session, axiosAuth]); // Rerun when session or axiosAuth changes
 
   // 5. Use NextAuth's status for a clean loading state
   if (status === 'loading' || !user) {
